@@ -19,8 +19,9 @@ namespace RippleDotNet.Models
         public string _secret { get; set; }
         public double _balance { get; set; }
 
-        private const string RIPPLED_URL = "http://s2.dotorie.com:8080/";
-        private const string ADDRESS_INFO = "accountinfo/";
+        private const string _RIPPLED_URL = "http://s2.dotorie.com:8080/";
+        private const string _ADDRESS_INFO = "accountinfo/";
+        private const string _TRANSFER_TO = "transfer"; 
         private static readonly HttpClient client = new HttpClient();
 
         public AccountItem(string email)
@@ -51,10 +52,18 @@ namespace RippleDotNet.Models
 
         private void _setBalance()
         {
-            string url = RIPPLED_URL + ADDRESS_INFO + _address;
+            string url = _RIPPLED_URL + _ADDRESS_INFO + _address;
             var item = _httpClientWrapperAsync(url);
             JObject json = JObject.Parse(item.Result);
             _balance = (double)json["xrpBalance"];
+        }
+
+        public string TransgerTo(string ToAddress, string Amount)
+        {
+            string url = _RIPPLED_URL + _TRANSFER_TO + $"?from={_address}&secret={_secret}&to={ToAddress}&amount={Amount}";
+            var item = _httpClientWrapperAsync(url);
+            JObject json = JObject.Parse(item.Result);
+            return "true";
         }
 
         private async Task<string> _httpClientWrapperAsync(string url)
