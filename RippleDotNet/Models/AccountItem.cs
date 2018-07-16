@@ -22,6 +22,7 @@ namespace RippleDotNet.Models
         private const string _RIPPLED_URL = "http://s2.dotorie.com:8080/";
         private const string _ADDRESS_INFO = "accountinfo/";
         private const string _TRANSFER_TO = "transfer"; 
+
         private static readonly HttpClient client = new HttpClient();
 
         public AccountItem(string email)
@@ -62,8 +63,7 @@ namespace RippleDotNet.Models
         {
             string url = _RIPPLED_URL + _TRANSFER_TO + $"?from={_address}&secret={_secret}&to={ToAddress}&amount={Amount}";
             var item = _httpClientWrapperAsync(url);
-            JObject json = JObject.Parse(item.Result);
-            return "true";
+            return item.Result;
         }
 
         private async Task<string> _httpClientWrapperAsync(string url)
